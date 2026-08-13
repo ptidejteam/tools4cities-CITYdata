@@ -32,27 +32,35 @@ public class BuildingProducer extends JSONProducer {
 	public BuildingProducer(final String filePath) {
 		super(filePath);
 	}
-
+	
+	
 	public void setBuildingName(String buildingName) {
-		if (buildingName != null) {
-			if (buildingName.endsWith(".geojson")) {
-				this.filePath = "./src/test/resources/" + buildingName;
-			} else if (buildingName.endsWith(".json")) {
-				this.filePath = "./src/test/resources/" + buildingName;
-			} else {
-				this.filePath = "./src/test/resources/" + buildingName + "_building.json";
-			}
-		} else {
+		if (buildingName == null) {
 			throw new InvalidParameterException("Please provide a building name to the producer.");
 		}
+		if (buildingName.endsWith(".geojson") || buildingName.endsWith(".json")) {
+			this.filePath = "./src/test/resources/" + buildingName;
+		} else {
+			this.filePath = "./src/test/resources/" + buildingName + "_building.json";
+		}
+//		if (buildingName != null) {
+//			if (buildingName.endsWith(".geojson")) {
+//				this.filePath = "./src/test/resources/" + buildingName;
+//			} else if (buildingName.endsWith(".json")) {
+//				this.filePath = "./src/test/resources/" + buildingName;
+//			} else {
+//				this.filePath = "./src/test/resources/" + buildingName + "_building.json";
+//			}
+//		} else {
+//			throw new InvalidParameterException("Please provide a building name to the producer.");
+//		}
 	}
 
 	@Override
-	public void fetch() {
-		InputStream inputStream = null;
+	protected InputStream obtainInputStream() {
 
 		// 1. Try classpath first
-		inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
 
 		// 2. Fall back to filesystem
 		if (inputStream == null) {
@@ -62,25 +70,6 @@ public class BuildingProducer extends JSONProducer {
 				throw new RuntimeException("Building file not found on classpath or filesystem: " + filePath, e);
 			}
 		}
-
-		final ArrayList<JsonObject> jsonOutput = new ArrayList<>();
-
-		try (InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-			final JsonElement parsedElement = JsonParser.parseReader(reader);
-
-			JsonObject outputJsonObject = new JsonObject();
-			if (parsedElement.isJsonArray()) {
-				outputJsonObject.add("result", parsedElement.getAsJsonArray());
-			} else {
-				outputJsonObject = parsedElement.getAsJsonObject();
-			}
-
-			jsonOutput.add(outputJsonObject);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to read building file: " + filePath, e);
-		}
-
-		this.setResult(jsonOutput);
-		this.applyOperation();
+		return inputStream;
 	}
 }
