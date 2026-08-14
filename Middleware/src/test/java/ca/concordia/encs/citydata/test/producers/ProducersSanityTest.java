@@ -18,7 +18,7 @@ import ca.concordia.encs.citydata.operations.TemporalAggregationOperation;
 import ca.concordia.encs.citydata.producers.BuildingProducer;
 import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
 import ca.concordia.encs.citydata.producers.EnvironmentalSensorProducer;
-import ca.concordia.encs.citydata.producers.GeoNamesCitiesProducer;
+import ca.concordia.encs.citydata.producers.GeoLocationProducer;
 import ca.concordia.encs.citydata.producers.RoomOccupancyProducer;
 
 public class ProducersSanityTest {
@@ -81,7 +81,7 @@ public class ProducersSanityTest {
 	
 	@Test
 	public void testGoeNamesCitiesProducer() {
-		final GeoNamesCitiesProducer producer = new GeoNamesCitiesProducer(null);
+		final GeoLocationProducer producer = new GeoLocationProducer(null);
 		producer.setFilePath("../data/geolocation/cities15000.txt");
 		
 		final JsonFilterOperation operation = new JsonFilterOperation();

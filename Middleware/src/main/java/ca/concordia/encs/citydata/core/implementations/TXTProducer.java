@@ -16,6 +16,7 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 public non-sealed class TXTProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 	
 	private String delimiter = "\t"; 
+	private boolean structured = false;
 	
 	public TXTProducer(final String filePath, final RequestOptions fileOptions) {
 		super(filePath, fileOptions);
@@ -29,14 +30,21 @@ public non-sealed class TXTProducer extends AbstractProducer<JsonObject> impleme
 		this.delimiter = delimiter;
 	}
 	
+	public void setStructured(Boolean structured) {
+		this.structured = structured;
+	}
+	
 	@Override
 	public void fetch() {
 		beforeFetch();
 		ArrayList<JsonObject> records = new ArrayList<>(); 
+		
 		try (InputStream inputStream = obtainInputStream();
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+			
 			String line;
+			
 			while ((line = reader.readLine()) != null) { 
 				if (!line.isBlank()) {
 					records.add(parseRecord(line.split(delimiter, -1)));
@@ -45,8 +53,10 @@ public non-sealed class TXTProducer extends AbstractProducer<JsonObject> impleme
 		} catch (IOException e) {
 					throw new MiddlewareException.DatasetNotFound("Error processing TXT data");
 		}
+		
 		this.setResult(records);
-		this.applyOperation();				
+		this.applyOperation();	
+					
 	}
 	
 	// For authorization checks - if the user has the right to access a specific producer. Implemented within the producers
@@ -58,12 +68,18 @@ public non-sealed class TXTProducer extends AbstractProducer<JsonObject> impleme
 		return this.fetchStream();
 	}
 	
+	// Only called when structured = true. Overrided in concrete producers
 	protected JsonObject parseRecord(String[] fields) {
+		return rawRecord(String.join(delimiter, fields));
+	}
+		
+	// Default output: implemented for users to access raw data from hub
+	protected JsonObject rawRecord(String line) {
 		JsonObject record = new JsonObject();
-		for (int i = 0; i <=fields.length; i++) {
-			record.addProperty("field" +i, fields[i]);
-		}
+		record.addProperty("raw", line);
 		return record;
 	}
+	
+	
 	
 }
