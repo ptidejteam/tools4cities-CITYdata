@@ -17,15 +17,15 @@ import ca.concordia.encs.citydata.services.DatasetAccessService;
  * 
  */
 
-public class RoomOccupancyProducer extends CSVProducer {
+public class CSVRoomOccupancyProducer extends CSVProducer {
 	
 	String metadataPath;
 	
-	public RoomOccupancyProducer(String filePath) {
+	public CSVRoomOccupancyProducer(String filePath) {
 		super(filePath);
 	}
 	
-	public RoomOccupancyProducer(final String filePath, final RequestOptions fileOptions ) {
+	public CSVRoomOccupancyProducer(final String filePath, final RequestOptions fileOptions ) {
 		super(filePath, fileOptions);
 	}
 	

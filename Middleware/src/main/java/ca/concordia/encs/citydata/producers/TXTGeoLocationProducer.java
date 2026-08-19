@@ -9,15 +9,15 @@ import ca.concordia.encs.citydata.core.implementations.TXTProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.services.DatasetAccessService;
 
-public class GeoLocationProducer extends TXTProducer {
+public class TXTGeoLocationProducer extends TXTProducer {
 
 	private String metadataPath;
 	
-	public GeoLocationProducer(String filePath) {
+	public TXTGeoLocationProducer(String filePath) {
 		super(filePath);
 	}
 	
-	public GeoLocationProducer(final String filePath, RequestOptions fileOptions) {
+	public TXTGeoLocationProducer(final String filePath, RequestOptions fileOptions) {
 		super(filePath, fileOptions);
 	}
 	
@@ -33,16 +33,16 @@ public class GeoLocationProducer extends TXTProducer {
 		} 
 	}
 	
-//	@Override
-//	protected JsonObject parseRecord(String[] f) {
-//		JsonObject record = new JsonObject();
-//		record.addProperty("geonameId", f[0]);
-//		record.addProperty("name", f[1]);
-//		record.addProperty("latitude", f[4]);
-//		record.addProperty("longitude", f[5]);
-//		record.addProperty("countryCode", f[8]);
-//		record.addProperty("population", f[14]);
-//		return record;
-//	}
+	@Override
+	protected JsonObject parseRecord(String[] f) {
+		JsonObject record = new JsonObject();
+		record.addProperty("geonameId", f[0]);
+		record.addProperty("name", f[1]);
+		record.addProperty("latitude", f[4]);
+		record.addProperty("longitude", f[5]);
+		record.addProperty("countryCode", f[8]);
+		record.addProperty("population", f[14]);
+		return record;
+	}
 
 }

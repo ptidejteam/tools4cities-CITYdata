@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ca.concordia.encs.citydata.producers.FCUProducer;
+import ca.concordia.encs.citydata.producers.CSVFCUProducer;
 
 /**
  * FCUProducer Tests
@@ -16,14 +16,14 @@ import ca.concordia.encs.citydata.producers.FCUProducer;
  * @date: 2026-05-29
  */
 
-public class FCUProducerTest {
+public class CSVFCUProducerTest {
 
-	private FCUProducer fcuProducer = null;
-	private final String stringFilePath = "./src/test/resources/sample_fcu.csv";
+	private CSVFCUProducer fcuProducer = null;
+	private final String stringFilePath = "sample_fcu.csv";
 
 	@BeforeEach
 	void setUp() {
-		fcuProducer = new FCUProducer(stringFilePath);
+		fcuProducer = new CSVFCUProducer(stringFilePath);
 	}
 
 	@Test

@@ -21,15 +21,15 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2025-05-28
  */
 
-public class BuildingProducer extends JSONProducer {
+public class JSONBuildingProducer extends JSONProducer {
 
 	private String filePath;
 
-	public BuildingProducer(final String filePath, final RequestOptions fileOptions) {
+	public JSONBuildingProducer(final String filePath, final RequestOptions fileOptions) {
 		super(filePath, fileOptions);
 	}
 
-	public BuildingProducer(final String filePath) {
+	public JSONBuildingProducer(final String filePath) {
 		super(filePath);
 	}
 	

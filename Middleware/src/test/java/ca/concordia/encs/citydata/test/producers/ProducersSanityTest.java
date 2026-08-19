@@ -15,17 +15,17 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.operations.JsonFilterOperation;
 import ca.concordia.encs.citydata.operations.StandardFilteringOperation;
 import ca.concordia.encs.citydata.operations.TemporalAggregationOperation;
-import ca.concordia.encs.citydata.producers.BuildingProducer;
+import ca.concordia.encs.citydata.producers.JSONBuildingProducer;
 import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
-import ca.concordia.encs.citydata.producers.EnvironmentalSensorProducer;
-import ca.concordia.encs.citydata.producers.GeoLocationProducer;
-import ca.concordia.encs.citydata.producers.RoomOccupancyProducer;
+import ca.concordia.encs.citydata.producers.CSVEnvironmentalSensorProducer;
+import ca.concordia.encs.citydata.producers.TXTGeoLocationProducer;
+import ca.concordia.encs.citydata.producers.CSVRoomOccupancyProducer;
 
 public class ProducersSanityTest {
 
 	@Test
 	public void testBuildingProducer() {
-		final BuildingProducer producer = new BuildingProducer(null, null);
+		final JSONBuildingProducer producer = new JSONBuildingProducer(null, null);
 		producer.setBuildingName("mock");
 		producer.fetch();
 		ArrayList<JsonObject> result = producer.getResult();
@@ -48,8 +48,8 @@ public class ProducersSanityTest {
 
 	@Test
 	public void testEnvironmentalSensorProducer() {
-		final EnvironmentalSensorProducer producer = new EnvironmentalSensorProducer(null);
-		producer.setFilePath("./src/test/resources/temperature.csv");
+		final CSVEnvironmentalSensorProducer producer = new CSVEnvironmentalSensorProducer(null);
+		producer.setFilePath("temperature.csv");
 		final StandardFilteringOperation operation = new StandardFilteringOperation();
 		operation.setSensorId("12504");
 		operation.setRoom("221");
@@ -64,8 +64,8 @@ public class ProducersSanityTest {
 
 	@Test
 	public void testRoomOccupancyProducer() {
-		final RoomOccupancyProducer producer = new RoomOccupancyProducer(null);
-		producer.setFilePath("./src/test/resources/occupancy.csv");
+		final CSVRoomOccupancyProducer producer = new CSVRoomOccupancyProducer(null);
+		producer.setFilePath("occupancy.csv");
 
 		final TemporalAggregationOperation operation = new TemporalAggregationOperation();
 		operation.setRoom("411");
@@ -80,9 +80,9 @@ public class ProducersSanityTest {
 	}
 	
 	@Test
-	public void testGoeNamesCitiesProducer() {
-		final GeoLocationProducer producer = new GeoLocationProducer(null);
-		producer.setFilePath("../data/geolocation/cities15000.txt");
+	public void testGeoNamesCitiesProducer() {
+		final TXTGeoLocationProducer producer = new TXTGeoLocationProducer(null);
+		producer.setFilePath("geolocation/cities15000.txt");
 		
 		final JsonFilterOperation operation = new JsonFilterOperation();
 		operation.setKey("countryCode");
@@ -92,7 +92,7 @@ public class ProducersSanityTest {
 		producer.fetch();
 		ArrayList<JsonObject> result = producer.getResult();
 		System.out.println("Result size: " + result.size());
-	    result.forEach(System.out::println);
+	    //result.forEach(System.out::println);
 	}
 
 	/* TODO: uncomment and make it run

@@ -58,7 +58,7 @@ def fetch_consumption(base_url, token):
     json_input = {
          "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
          "withParams": [
-             { "name": "filePath", "value": "src/test/resources/OMHM_natural_gas.csv" }
+             { "name": "filePath", "value": "OMHM_natural_gas.csv" }
          ],
          "apply": [
              {

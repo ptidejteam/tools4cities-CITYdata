@@ -228,22 +228,45 @@ public sealed abstract class AbstractProducer<E> extends AbstractEntity implemen
 	 * error handling in fetchFromPath()/fetchStream() is unaffected.
 	 */
 	
+//	private Path resolveFilePath() {
+//		Path direct = Paths.get(this.filePath);
+//		if (Files.exists(direct)) {
+//			return direct.toAbsolutePath().normalize();
+//		}
+// 
+//		Path dataDir = locateDataDirectory();
+//		if (dataDir != null) {
+//			Path resolved = dataDir.resolve(this.filePath).normalize();
+//			if (Files.exists(resolved)) {
+//				return resolved;
+//			}
+//		}
+// 
+//		return direct;
+//	}
+	
 	private Path resolveFilePath() {
 		Path direct = Paths.get(this.filePath);
 		if (Files.exists(direct)) {
 			return direct.toAbsolutePath().normalize();
 		}
  
-		Path dataDir = locateDataDirectory();
-		if (dataDir != null) {
-			Path resolved = dataDir.resolve(this.filePath).normalize();
-			if (Files.exists(resolved)) {
-				return resolved;
+		String relative = this.filePath.startsWith("/") || this.filePath.startsWith("\\")
+				? this.filePath.substring(1)
+				: this.filePath;
+		
+		for (String propertyKey : java.util.List.of("data.path.route", "test.data.path.route")) {
+			Path root = locateDataDirectory(propertyKey);
+			if (root != null) {
+				Path resolved = root.resolve(relative).normalize();
+				if (Files.exists(resolved)) {
+					return resolved;
+				}
 			}
 		}
- 
 		return direct;
 	}
+	
 	
 
 	/**
@@ -314,7 +337,29 @@ public sealed abstract class AbstractProducer<E> extends AbstractEntity implemen
 	 * made private since its only purpose is to support resolveFilePath() —
 	 * previously it was computed but never actually consulted anywhere.
 	 */
-	private Path locateDataDirectory() {
+//	private Path locateDataDirectory() {
+//		java.util.Properties props = new java.util.Properties();
+//		try (java.io.InputStream in = getClass().getClassLoader().getResourceAsStream("application.properties")) {
+//			if (in != null) {
+//				props.load(in);
+//			}
+//		} catch (java.io.IOException e) {
+//			// ignore and use defaults
+//		}
+// 
+//		String configured = props.getProperty("data.path.route");
+//		if (configured != null && !configured.isBlank()) {
+//			configured = configured.trim();
+//			if (configured.startsWith("~")) {
+//				configured = configured.replaceFirst("^~", System.getProperty("user.home"));
+//			}
+//			Path configuredPath = Paths.get(configured).toAbsolutePath().normalize();
+//			if (Files.exists(configuredPath)) {
+//				return configuredPath;
+//			}
+//	}
+	
+	private Path locateDataDirectory(String propertyKey) {
 		java.util.Properties props = new java.util.Properties();
 		try (java.io.InputStream in = getClass().getClassLoader().getResourceAsStream("application.properties")) {
 			if (in != null) {
@@ -324,16 +369,17 @@ public sealed abstract class AbstractProducer<E> extends AbstractEntity implemen
 			// ignore and use defaults
 		}
  
-		String configured = props.getProperty("data.path.route");
-		if (configured != null && !configured.isBlank()) {
-			configured = configured.trim();
-			if (configured.startsWith("~")) {
-				configured = configured.replaceFirst("^~", System.getProperty("user.home"));
-			}
-			Path configuredPath = Paths.get(configured).toAbsolutePath().normalize();
-			if (Files.exists(configuredPath)) {
-				return configuredPath;
-			}
+		String configured = props.getProperty(propertyKey);
+		if (configured == null || configured.isBlank()) {
+		    return null;
+		}
+		configured = configured.trim();
+		if (configured.startsWith("~")) {
+			configured = configured.replaceFirst("^~", System.getProperty("user.home"));
+		}
+		Path configuredPath = Paths.get(configured).toAbsolutePath().normalize();
+		if (Files.exists(configuredPath)) {
+			return configuredPath;
 		}
 
 

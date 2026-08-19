@@ -1,7 +1,7 @@
 {
-  "use": "ca.concordia.encs.citydata.producers.GeoNamesCitiesProducer",
+  "use": "ca.concordia.encs.citydata.producers.TXTGeoLocationProducer",
   "withParams": [
-    { "name": "filePath", "value": "../data/geolocation/cities15000.txt" }
+    { "name": "filePath", "value": "geolocation/cities15000.txt" }
   ],
   "apply": [
 	{

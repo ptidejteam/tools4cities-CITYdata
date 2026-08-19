@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.concordia.encs.citydata.producers.GeoLocationProducer;
+import ca.concordia.encs.citydata.producers.TXTGeoLocationProducer;
 
 
 /**
@@ -36,7 +36,7 @@ public class ProducersDataController {
 //	}
 	@GetMapping(value = "/cities15000", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getGeoNamesCities(@RequestParam(defaultValue = "false") boolean structured) {
-		GeoLocationProducer producer = new GeoLocationProducer("../data/geolocation/cities15000.txt");
+		TXTGeoLocationProducer producer = new TXTGeoLocationProducer("../data/geolocation/cities15000.txt");
 		producer.setStructured(structured);
 		producer.fetch();
 		return producer.toString();
@@ -44,7 +44,7 @@ public class ProducersDataController {
 	
 	@GetMapping(value = "/codes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getGeoCodes(@RequestParam(defaultValue = "false") boolean structured) {
-		GeoLocationProducer producer = new GeoLocationProducer("../data/geolocation/admin2Codes.txt");
+		TXTGeoLocationProducer producer = new TXTGeoLocationProducer("../data/geolocation/admin2Codes.txt");
 		producer.setStructured(structured);
 		producer.fetch();
 		return producer.toString();

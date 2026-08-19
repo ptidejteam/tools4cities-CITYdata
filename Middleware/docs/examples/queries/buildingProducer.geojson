@@ -1,5 +1,5 @@
 {
-    "use": "ca.concordia.encs.citydata.producers.BuildingProducer",
+    "use": "ca.concordia.encs.citydata.producers.JSONBuildingProducer",
     "withParams": [
         {"name": "buildingName", "value": "test_one_building.geojson"}
     ],

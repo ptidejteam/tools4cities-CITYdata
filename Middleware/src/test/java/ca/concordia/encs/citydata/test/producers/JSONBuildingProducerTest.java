@@ -31,7 +31,7 @@ import ca.concordia.encs.citydata.test.PayloadFactory;
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class BuildingProducerTest extends AbstractTest {
+public class JSONBuildingProducerTest extends AbstractTest {
 
 	List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
 	Authentication authentication = new UsernamePasswordAuthenticationToken("testuser", null, authorities);

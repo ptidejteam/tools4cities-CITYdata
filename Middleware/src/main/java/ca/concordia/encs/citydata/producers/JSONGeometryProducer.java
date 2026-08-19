@@ -17,7 +17,7 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2025-05-28
  */
 
-public class GeometryProducer extends JSONProducer {
+public class JSONGeometryProducer extends JSONProducer {
 
 	private JSONProducer jsonProducer;
 
@@ -35,11 +35,11 @@ public class GeometryProducer extends JSONProducer {
 		this.jsonProducer.setOperation(operation);
 	}
 
-	public GeometryProducer() {
+	public JSONGeometryProducer() {
 		super(null, null);
 	}
 
-	public GeometryProducer(String filePath, RequestOptions fileOptions) {
+	public JSONGeometryProducer(String filePath, RequestOptions fileOptions) {
 		super(filePath, fileOptions);
 	}
 

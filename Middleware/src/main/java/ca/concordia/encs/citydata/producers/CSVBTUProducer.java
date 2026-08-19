@@ -23,15 +23,15 @@ import ca.concordia.encs.citydata.services.DatasetAccessService;
  * @since 2026-08-03
  */
 
-public class BTUProducer extends CSVProducer {
+public class CSVBTUProducer extends CSVProducer {
 
 	private String metadataPath;
 
-	public BTUProducer(String filePath) {
+	public CSVBTUProducer(String filePath) {
 		super(filePath);
 	}
 
-	public BTUProducer(final String filePath, final RequestOptions fileOptions) {
+	public CSVBTUProducer(final String filePath, final RequestOptions fileOptions) {
 		super(filePath, fileOptions);
 	}
 
