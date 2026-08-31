@@ -79,21 +79,21 @@ public class ProducersSanityTest {
 		System.out.println(result);
 	}
 	
-//	@Test
-//	public void testGeoNamesCitiesProducer() {
-//		final TXTGeoLocationProducer producer = new TXTGeoLocationProducer(null);
-//		producer.setFilePath("geolocation/cities15000.txt");
-//		
-//		final JsonFilterOperation operation = new JsonFilterOperation();
-//		operation.setKey("countryCode");
-//		operation.setValue("AE");
-//		
-//		producer.setOperation(operation);
-//		producer.fetch();
-//		ArrayList<JsonObject> result = producer.getResult();
-//		System.out.println("Result size: " + result.size());
-//	    //result.forEach(System.out::println);
-//	}
+	@Test
+	public void testGeoNamesCitiesProducer() {
+		final TXTGeoLocationProducer producer = new TXTGeoLocationProducer(null);
+		producer.setFilePath("geolocation/cities15000.txt");
+		
+		final JsonFilterOperation operation = new JsonFilterOperation();
+		operation.setKey("countryCode");
+		operation.setValue("AE");
+		
+		producer.setOperation(operation);
+		producer.fetch();
+		ArrayList<JsonObject> result = producer.getResult();
+		System.out.println("Result size: " + result.size());
+	    result.forEach(System.out::println);
+	}
 
 	/* TODO: uncomment and make it run
 	@Test

@@ -27,13 +27,13 @@ import ca.concordia.encs.citydata.test.PayloadFactory;
 
 public class TXTGeoLocationProducerTest extends AbstractTest {
 	
-//	@Test
-//	void testGeoNamesCitiesProducer() throws Exception {
-//		String jsonPayload = PayloadFactory.getExampleQuery("TXTProducer");
-//		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-//				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
-//				.andExpect(content().string(containsString("\"countryCode\":\"AE\"")));
-//	}
+	@Test
+	void testGeoNamesCitiesProducer() throws Exception {
+		String jsonPayload = PayloadFactory.getExampleQuery("TXTProducer");
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
+				.andExpect(content().string(containsString("\"countryCode\":\"AE\"")));
+	}
 		
 		
 }
