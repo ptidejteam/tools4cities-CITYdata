@@ -1,5 +1,5 @@
 {
-  "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
+  "use": "ca.concordia.encs.citydata.producers.CSVCalibrationProducer",
   "withParams": [
     { "name": "filePath", "value": "OMHM_natural_gas.csv" }
   ],
