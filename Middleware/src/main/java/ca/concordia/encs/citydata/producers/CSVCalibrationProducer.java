@@ -14,13 +14,13 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2026-03-01
  */
 
-public class CalibrationProducer extends CSVProducer {
+public class CSVCalibrationProducer extends CSVProducer {
 
-	public CalibrationProducer(String filePath) {
+	public CSVCalibrationProducer(String filePath) {
 		super(filePath);
 	}
 
-	public CalibrationProducer(String filePath, RequestOptions fileOptions) {
+	public CSVCalibrationProducer(String filePath, RequestOptions fileOptions) {
 		super(filePath, fileOptions);
 	}
 

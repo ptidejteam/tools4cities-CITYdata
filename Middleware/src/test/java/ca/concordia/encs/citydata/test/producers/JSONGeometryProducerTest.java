@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.operations.MergeOperation;
 import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
-import ca.concordia.encs.citydata.producers.GeometryProducer;
+import ca.concordia.encs.citydata.producers.JSONGeometryProducer;
 import ca.concordia.encs.citydata.test.AbstractTest;
 
 /**
@@ -23,13 +23,13 @@ import ca.concordia.encs.citydata.test.AbstractTest;
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
 
-public class GeometryProducerTest extends AbstractTest {
+public class JSONGeometryProducerTest extends AbstractTest {
 
 	private final String city = "";
 
 	@BeforeEach
 	void setUp() {
-		GeometryProducer geometryProducer = new GeometryProducer("./src/test/resources/montreal_geometries.json", null);
+		JSONGeometryProducer geometryProducer = new JSONGeometryProducer("./src/test/resources/montreal_geometries.json", null);
 		geometryProducer.setCity(city);
 		EnergyConsumptionProducer energyConsumptionProducer = new EnergyConsumptionProducer(city);
 		MergeOperation mergeOperation = new MergeOperation();

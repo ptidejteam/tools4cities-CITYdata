@@ -1,0 +1,21 @@
+{
+  "use": "ca.concordia.encs.citydata.producers.TXTGeoLocationProducer",
+  "withParams": [
+    { "name": "filePath", "value": "geolocation/cities15000.txt" }
+  ],
+  "apply": [
+	{
+	      "name": "ca.concordia.encs.citydata.operations.JsonFilterOperation",
+	      "withParams": [
+	        {
+	          "name": "key",
+	          "value": "countryCode"
+	        },
+	        {
+	          "name": "value",
+	          "value": "AE"
+	        }
+	      ]
+	    }
+  ]
+}

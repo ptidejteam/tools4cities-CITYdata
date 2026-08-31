@@ -1,6 +1,8 @@
 package ca.concordia.encs.citydata.core.implementations;
 
-import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import com.google.gson.JsonElement;
@@ -29,25 +31,54 @@ public non-sealed class JSONProducer extends AbstractProducer<JsonObject> implem
 
 	@Override
 	public void fetch() {
-		final ArrayList<JsonObject> jsonOutput = new ArrayList<>();
-
-		// Use ByteArrayOutputStream to fetch data
-
-		OutputStream outputStream = this.fetchFromPath();
-		String inputJson = outputStream.toString();
-
-		// Convert JSON string to object
-		final JsonElement inputJsonElement = JsonParser.parseString(inputJson);
-
-		JsonObject outputJsonObject = new JsonObject();
-		if (inputJsonElement.isJsonArray()) {
-			outputJsonObject.add("result", inputJsonElement);
-		} else {
-			outputJsonObject = inputJsonElement.getAsJsonObject();
+		beforeFetch();
+		try (InputStream inputStream = obtainInputStream();
+				InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+			final JsonElement parsedElement = JsonParser.parseReader(reader);
+			final ArrayList<JsonObject> jsonOutput = new ArrayList<>();
+			jsonOutput.add(wrapAsObject(parsedElement));
+			
+			this.setResult(jsonOutput);
+			this.applyOperation();
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to read JSON file: " + this.getFilePath() + " (" + e.getClass().getSimpleName() + ": " + e.getMessage() + ")", e);
 		}
+//		final ArrayList<JsonObject> jsonOutput = new ArrayList<>();
+//
+//		// Use ByteArrayOutputStream to fetch data
+//
+//		OutputStream outputStream = this.fetchFromPath();
+//		String inputJson = outputStream.toString();
+//
+//		// Convert JSON string to object
+//		final JsonElement inputJsonElement = JsonParser.parseString(inputJson);
+//
+//		JsonObject outputJsonObject = new JsonObject();
+//		if (inputJsonElement.isJsonArray()) {
+//			outputJsonObject.add("result", inputJsonElement);
+//		} else {
+//			outputJsonObject = inputJsonElement.getAsJsonObject();
+//		}
+//
+//		jsonOutput.add(outputJsonObject);
+//		this.setResult(jsonOutput);
+//		this.applyOperation();
+	}
 
-		jsonOutput.add(outputJsonObject);
-		this.setResult(jsonOutput);
-		this.applyOperation();
+	protected JsonObject wrapAsObject(JsonElement parsedElement) {
+		if (parsedElement.isJsonArray()) {
+			JsonObject wrapped = new JsonObject();
+			wrapped.add("result", parsedElement.getAsJsonArray());
+			return wrapped;
+		}
+		return parsedElement.getAsJsonObject();
+	}
+
+	protected InputStream obtainInputStream() {
+		return this.fetchStream();
+	}
+
+	protected void beforeFetch() {
+		
 	}
 }

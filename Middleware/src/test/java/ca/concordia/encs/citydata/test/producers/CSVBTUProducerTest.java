@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ca.concordia.encs.citydata.producers.BTUProducer;
+import ca.concordia.encs.citydata.producers.CSVBTUProducer;
 
 /**
  * BTUProducer Tests
@@ -16,14 +16,14 @@ import ca.concordia.encs.citydata.producers.BTUProducer;
  * @date: 2026-05-29
  */
 
-public class BTUProducerTest {
+public class CSVBTUProducerTest {
 
-	private BTUProducer btuProducer = null;
-	private final String stringFilePath = "./src/test/resources/sample_btu.csv";
+	private CSVBTUProducer btuProducer = null;
+	private final String stringFilePath = "sample_btu.csv";
 
 	@BeforeEach
 	void setUp() {
-		btuProducer = new BTUProducer(stringFilePath);
+		btuProducer = new CSVBTUProducer(stringFilePath);
 	}
 
 	@Test

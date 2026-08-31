@@ -17,13 +17,13 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @author: Minette Z. Fixed the producer by adding the required constructor from CSVProducer to properly initialize the inherited base producer (CSVProducer)
  * @date: 2026-05-29
  */
-public class FCUProducer extends CSVProducer{
+public class CSVFCUProducer extends CSVProducer{
 
-	public FCUProducer(String filePath) {
+	public CSVFCUProducer(String filePath) {
 		super(filePath);
 	}
 	
-	public FCUProducer(String filePath, RequestOptions fileOptions) {
+	public CSVFCUProducer(String filePath, RequestOptions fileOptions) {
 		super(filePath, fileOptions);
 	}
 	

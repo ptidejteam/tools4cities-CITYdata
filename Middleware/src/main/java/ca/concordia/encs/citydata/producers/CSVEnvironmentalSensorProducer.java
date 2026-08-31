@@ -15,9 +15,9 @@ import ca.concordia.encs.citydata.core.implementations.CSVProducer;
  * @date: 2025-10-03
  */
 
-public class EnvironmentalSensorProducer extends CSVProducer {
+public class CSVEnvironmentalSensorProducer extends CSVProducer {
 
-	public EnvironmentalSensorProducer(String filePath) {
+	public CSVEnvironmentalSensorProducer(String filePath) {
 		super(filePath);
 	}
 
