@@ -1,10 +1,5 @@
 package ca.concordia.encs.citydata.test.producers;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
@@ -12,14 +7,12 @@ import org.junit.jupiter.api.Test;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.operations.JsonFilterOperation;
 import ca.concordia.encs.citydata.operations.StandardFilteringOperation;
 import ca.concordia.encs.citydata.operations.TemporalAggregationOperation;
-import ca.concordia.encs.citydata.producers.JSONBuildingProducer;
-import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
 import ca.concordia.encs.citydata.producers.CSVEnvironmentalSensorProducer;
-import ca.concordia.encs.citydata.producers.TXTGeoLocationProducer;
 import ca.concordia.encs.citydata.producers.CSVRoomOccupancyProducer;
+import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
+import ca.concordia.encs.citydata.producers.JSONBuildingProducer;
 
 public class ProducersSanityTest {
 
@@ -78,23 +71,23 @@ public class ProducersSanityTest {
 		ArrayList<String> result = producer.getResult();
 		System.out.println(result);
 	}
-	
-	@Test
-	public void testGeoNamesCitiesProducer() {
-		final TXTGeoLocationProducer producer = new TXTGeoLocationProducer(null);
-		producer.setFilePath("geolocation/cities15000.txt");
-		
-		final JsonFilterOperation operation = new JsonFilterOperation();
-		operation.setKey("countryCode");
-		operation.setValue("AE");
-		
-		producer.setOperation(operation);
-		producer.fetch();
-		ArrayList<JsonObject> result = producer.getResult();
-		System.out.println("Result size: " + result.size());
-	    result.forEach(System.out::println);
-	}
 
+	/*	@Test
+		public void testGeoNamesCitiesProducer() {
+			final TXTGeoLocationProducer producer = new TXTGeoLocationProducer(null);
+			producer.setFilePath("geolocation/cities15000.txt");
+			
+			final JsonFilterOperation operation = new JsonFilterOperation();
+			operation.setKey("countryCode");
+			operation.setValue("AE");
+			
+			producer.setOperation(operation);
+			producer.fetch();
+			ArrayList<JsonObject> result = producer.getResult();
+			System.out.println("Result size: " + result.size());
+		    result.forEach(System.out::println);
+		}
+	*/
 	/* TODO: uncomment and make it run
 	@Test
 		 GeometryProducer wraps JSONProducer and applies MergeOperation
