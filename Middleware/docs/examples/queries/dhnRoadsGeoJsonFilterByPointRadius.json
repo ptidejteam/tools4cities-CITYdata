@@ -1,0 +1,32 @@
+{
+  "use": "ca.concordia.encs.citydata.producers.CKANProducer",
+  "withParams": [
+    {
+      "name": "url",
+      "value": "https://ngci.encs.concordia.ca/ckan/api/3"
+    },
+    {
+      "name": "resourceId",
+      "value": "a98f2d84-aa71-4adc-a12e-480ce133877e"
+    }
+  ],
+  "apply": [
+    {
+      "name": "ca.concordia.encs.citydata.operations.GeoJsonFilterOperation",
+      "withParams": [
+        {
+          "name": "centerLongitude",
+          "value": -73.74085
+        },
+        {
+          "name": "centerLatitude",
+          "value": 45.51895
+        },
+        {
+          "name": "radiusMeters",
+          "value": 200.0
+        }
+      ]
+    }
+  ]
+}

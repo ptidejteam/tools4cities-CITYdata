@@ -51,7 +51,12 @@ public class DiscoveryRoutesTest extends AbstractTest {
 		mockMvc.perform(get("/operations/list")).andExpect(status().is2xxSuccessful())
 				.andExpect(content().string(containsString("ca.concordia.encs.citydata.operations.MergeOperation")))
 				.andExpect(content().string(containsString("targetProducerParams")))
-				.andExpect(content().string(containsString("targetProducer")));
+				.andExpect(content().string(containsString("targetProducer")))
+				.andExpect(content()
+						.string(containsString("ca.concordia.encs.citydata.operations.GeoJsonFilterOperation")))
+				.andExpect(content().string(containsString("centerLongitude")))
+				.andExpect(content().string(containsString("centerLatitude")))
+				.andExpect(content().string(containsString("radiusMeters")));
 	}
 
 	@Test
