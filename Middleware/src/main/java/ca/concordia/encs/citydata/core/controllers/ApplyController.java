@@ -1,7 +1,9 @@
 package ca.concordia.encs.citydata.core.controllers;
 
 import java.io.IOException;
+import org.springframework.http.HttpHeaders;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.UUID;
 
 import org.springframework.core.io.ClassPathResource;
@@ -18,10 +20,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
+import ca.concordia.encs.citydata.core.contracts.IDataStore;
+import ca.concordia.encs.citydata.core.contracts.IDatastoreManager.DatastoreType;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.implementations.ExceptionProducer;
+import ca.concordia.encs.citydata.datastores.DatastoreManager;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.runners.SequentialRunner;
+import io.netty.handler.codec.base64.Base64Encoder;
 
 /**
  * This class manages all requests sent to the /apply route
@@ -39,7 +45,7 @@ import ca.concordia.encs.citydata.runners.SequentialRunner;
 public class ApplyController {
 
 	@RequestMapping(value = "/sync", method = RequestMethod.POST)
-	public ResponseEntity<String> sync(@RequestBody String steps) {
+	public ResponseEntity<?> sync(@RequestBody String steps) {
 		UUID runnerId = null;
 		String errorMessage = "";
 		HttpStatus responseCode = HttpStatus.OK;
@@ -87,7 +93,15 @@ public class ApplyController {
 		// return an error code
 		if (resultProducer.getClass() == ExceptionProducer.class) {
 			responseCode = HttpStatus.INTERNAL_SERVER_ERROR;
-			return ResponseEntity.status(responseCode).body(resultProducer.toString());
+			//return ResponseEntity.status(responseCode).body(resultProducer.toString());
+		} else {
+			if (resultProducer.isBinary()) {
+		        byte[] bytes = (byte[]) resultProducer.getResult().get(0);
+		        return ResponseEntity.ok()
+		                .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+		                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"image." + resultProducer.getFileExtension() + "\"")
+		                .body(bytes);
+		    }
 		}
 
 		return ResponseEntity.status(responseCode).body(resultProducer.toString());

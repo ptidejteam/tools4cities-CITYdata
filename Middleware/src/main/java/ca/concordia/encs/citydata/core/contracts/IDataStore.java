@@ -12,9 +12,10 @@ import java.util.UUID;
  * 
  * Refactoring made: changed the method's signature to use UUIDs instead of Strings
  * and default methods to still handle String IDs, set, get, delete
+ * Refactoring: Added getPath method to return to users the path where the image was stored
  *
  * @author Gabriel C. Ullmann, Minette Zongo
- * @since 2025-06-18
+ * @since 2025-06-18, 2026-09-15
  */
 
 public interface IDataStore<E> {
@@ -47,5 +48,9 @@ public interface IDataStore<E> {
 		if (key != null) {
 			delete(UUID.fromString(key));
 		}
+	}
+
+	default String getPath(UUID runnerId) {
+	    return null;
 	}
 }

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import ca.concordia.encs.citydata.core.contracts.IDataStore;
+import ca.concordia.encs.citydata.core.contracts.IDatastoreManager.DatastoreType;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
@@ -20,6 +22,7 @@ import ca.concordia.encs.citydata.core.implementations.AbstractRunner;
 import ca.concordia.encs.citydata.core.implementations.ExceptionProducer;
 import ca.concordia.encs.citydata.core.utils.ProducerUsageData;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
+import ca.concordia.encs.citydata.datastores.DatastoreManager;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.datastores.MongoDataStore;
 
@@ -158,12 +161,12 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 		final Date timeObject = Calendar.getInstance().getTime();
 		final String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timeObject);
 		setMetadataMethod.invoke(producer, "timestamp", timestamp);
-
-		// store producer in the datastore
-		final InMemoryDataStore store = InMemoryDataStore.getInstance();
+		
 		final UUID runnerId = this.getId();
+		// store producer in the datastore for existing producers
+		final InMemoryDataStore store = InMemoryDataStore.getInstance();
 		store.set(runnerId, producer);
-
+		
 		final String producerName = this.steps.get("use").getAsString();
 		this.storeProducerCallInfo(runnerId, this.steps.toString(), producerName);
 	}

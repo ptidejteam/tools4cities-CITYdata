@@ -227,23 +227,6 @@ public sealed abstract class AbstractProducer<E> extends AbstractEntity implemen
 	 * error handling in fetchFromPath()/fetchStream() is unaffected.
 	 */
 	
-//	private Path resolveFilePath() {
-//		Path direct = Paths.get(this.filePath);
-//		if (Files.exists(direct)) {
-//			return direct.toAbsolutePath().normalize();
-//		}
-// 
-//		Path dataDir = locateDataDirectory();
-//		if (dataDir != null) {
-//			Path resolved = dataDir.resolve(this.filePath).normalize();
-//			if (Files.exists(resolved)) {
-//				return resolved;
-//			}
-//		}
-// 
-//		return direct;
-//	}
-	
 	private Path resolveFilePath() {
 		Path direct = Paths.get(this.filePath);
 		if (Files.exists(direct)) {
@@ -336,27 +319,6 @@ public sealed abstract class AbstractProducer<E> extends AbstractEntity implemen
 	 * made private since its only purpose is to support resolveFilePath() —
 	 * previously it was computed but never actually consulted anywhere.
 	 */
-//	private Path locateDataDirectory() {
-//		java.util.Properties props = new java.util.Properties();
-//		try (java.io.InputStream in = getClass().getClassLoader().getResourceAsStream("application.properties")) {
-//			if (in != null) {
-//				props.load(in);
-//			}
-//		} catch (java.io.IOException e) {
-//			// ignore and use defaults
-//		}
-// 
-//		String configured = props.getProperty("data.path.route");
-//		if (configured != null && !configured.isBlank()) {
-//			configured = configured.trim();
-//			if (configured.startsWith("~")) {
-//				configured = configured.replaceFirst("^~", System.getProperty("user.home"));
-//			}
-//			Path configuredPath = Paths.get(configured).toAbsolutePath().normalize();
-//			if (Files.exists(configuredPath)) {
-//				return configuredPath;
-//			}
-//	}
 	
 	private Path locateDataDirectory(String propertyKey) {
 		java.util.Properties props = new java.util.Properties();

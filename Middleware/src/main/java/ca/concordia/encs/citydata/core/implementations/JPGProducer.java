@@ -1,19 +1,21 @@
 package ca.concordia.encs.citydata.core.implementations;
-
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import com.google.gson.JsonObject;
+import java.util.List;
 
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
-import javax.imageio.ImageIO;
+/**
+ * JPGProducer : fetches Jpeg images from any source, this one is specific to hub data
+ *
+ * @author Vinicus Miotto, Minette Zongo
+ * @since 2026-09-15
+ */
 
-public non-sealed class JPGProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+public non-sealed class JPGProducer extends AbstractProducer<byte[]> implements IProducer<byte[]> {
 
     public JPGProducer(final String filePath, final RequestOptions fileOptions) {
         super(filePath, fileOptions);
@@ -26,45 +28,28 @@ public non-sealed class JPGProducer extends AbstractProducer<JsonObject> impleme
     @Override
     public void fetch() {
         beforeFetch();
-        ArrayList<JsonObject> results = new ArrayList<>();
+       // ArrayList<JsonObject> results = new ArrayList<>();
 
         try (InputStream inputStream = obtainInputStream()) {
 
-            BufferedImage image = ImageIO.read(inputStream);
-
-            JsonObject metadata = getMetadata(image);
-
-            results.add(metadata);
+            this.setResult(new ArrayList<>(List.of(inputStream.readAllBytes())));
+            this.applyOperation();
 
         } catch (IOException e) {
             throw new MiddlewareException.DatasetNotFound("Error processing JPG data");
-        }
-
-        this.setResult(results);
-        this.applyOperation();
+        }  
 
     }
-
-    private @NonNull JsonObject getMetadata(BufferedImage image) {
-        if (image == null) {
-            throw new MiddlewareException.DatasetNotFound(
-                    "File is not a readable JPG image: " + getFilePath()
-            );
-        }
-
-        String filePath = getFilePath();
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        JsonObject metadata = new JsonObject();
-
-        metadata.addProperty("filePath", filePath);
-        metadata.addProperty("format", "JPEG");
-        metadata.addProperty("width", width);
-        metadata.addProperty("height", height);
-        return metadata;
+    
+    @Override 
+    public boolean isBinary() { 
+    	return true; 
     }
-
+    
+    @Override 
+    public String getFileExtension() { 
+    	return "jpg"; 
+    }
 
     // For authorization checks - if the user has the right to access a specific producer. Implemented within the producers
     protected void beforeFetch() {

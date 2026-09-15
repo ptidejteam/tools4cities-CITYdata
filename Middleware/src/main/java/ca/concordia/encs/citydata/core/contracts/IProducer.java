@@ -8,9 +8,11 @@ import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
  *
  * The Producer entity is responsible for: - Fetching data - Applying
  * operation on the result - Notify observers when both tasks are done
+ * Refactored by adding JPG files management. By default, all the other producers manage 
+ * non binary files, only JPGProducer will override isBinary with true
  *
- * @author Gabriel C. Ullmann
- * @since 2024-12-01
+ * @author Gabriel C. Ullmann, Minette Zongo
+ * @since 2024-12-01, 2026-09-15
  */
 
 public interface IProducer<E> {
@@ -31,5 +33,9 @@ public interface IProducer<E> {
 
 	// 4 - output data
 	ArrayList<E> getResult();
+	
+	// Allow JPG files management
+	default boolean isBinary() { return false; }
+	default String getFileExtension() { return "bin"; }
 
 }

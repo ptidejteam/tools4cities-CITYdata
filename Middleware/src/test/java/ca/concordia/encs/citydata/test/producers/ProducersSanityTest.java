@@ -104,28 +104,6 @@ public class ProducersSanityTest {
 		result.stream().limit(5).forEach(System.out::println);
 	}
 
-	@Test
-	public void testJPGMetadataProducer() {
-		final JPGMetadataProducer producer = new JPGMetadataProducer(null);
-		producer.setFilePath("citydata_logo.jpg");
-		producer.fetch();
-
-		ArrayList<JsonObject> result = producer.getResult();
-		assertNotNull(result);
-		assertFalse(result.isEmpty());
-
-		JsonObject metadata = result.getFirst();
-
-		assertTrue(metadata.has("width"));
-		assertTrue(metadata.has("height"));
-
-		int width = metadata.get("width").getAsInt();
-		int height = metadata.get("height").getAsInt();
-
-		assertTrue((width > 0) && (height > 0));
-
-		System.out.println("JPG result: " + result);
-	}
 
 	/* TODO: uncomment and make it run
 	@Test

@@ -1,0 +1,9 @@
+{
+  "use": "ca.concordia.encs.citydata.core.implementations.JPGProducer",
+  "withParams": [
+    { "name": "filePath", "value": "energy_systems/schemas/ASHP+TES+GasBoiler.jpg" }
+  ],
+  "apply": [
+	
+  ]
+}
