@@ -47,7 +47,7 @@ import java.nio.charset.StandardCharsets;
 
 public sealed abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E>
 		permits JSONProducer, CSVProducer, JsonStreamingProducer, TXTProducer, ExceptionProducer, FirebaseProducer, PortfolioManagerProducer,
-		PortfolioManagerMetadataProducer, JsonArrayProducer {
+		PortfolioManagerMetadataProducer, JsonArrayProducer, XmlProducer {
 	private String filePath;
 	private RequestOptions fileOptions;
 	private IOperation<E> operation;

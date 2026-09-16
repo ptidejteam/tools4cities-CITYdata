@@ -55,25 +55,19 @@ public non-sealed class XmlProducer extends AbstractProducer<JsonObject>
         try (InputStream inputStream = obtainInputStream()) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-            // Secure XML parser against XXE attacks
+            // Secure XML parser against XXE attacks. According to OWASP's XXE, only disallowing doctype-decl is sufficient
             factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-            factory.setXIncludeAware(false);
-            factory.setExpandEntityReferences(false);
-
+            
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(inputStream);
             doc.getDocumentElement().normalize();
 
             if (recordTag != null && !recordTag.isBlank()) {
-                // One record per matching element
                 NodeList recordNodes = doc.getElementsByTagName(recordTag);
                 for (int i = 0; i < recordNodes.getLength(); i++) {
                     records.add(parseRecord((Element) recordNodes.item(i)));
                 }
             } else {
-                // Whole document as a single record
                 records.add(parseRecord(doc.getDocumentElement()));
             }
 
@@ -95,7 +89,7 @@ public non-sealed class XmlProducer extends AbstractProducer<JsonObject>
         return this.fetchStream();
     }
 
-    // Only called when structured = true. Overrided in concrete producers
+    // Only called when structured = true. Overridden in concrete producers
     protected JsonObject parseRecord(Element element) {
         return rawRecord(element);
     }
