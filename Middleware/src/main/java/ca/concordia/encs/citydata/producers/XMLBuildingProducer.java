@@ -2,7 +2,6 @@ package ca.concordia.encs.citydata.producers;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import com.google.gson.JsonObject;
 
@@ -11,18 +10,17 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.services.DatasetAccessService;
 
 
+
 public class XMLBuildingProducer extends XmlProducer {
 
 	private String metadataPath;
 
 	public XMLBuildingProducer(String filePath) {
 		super(filePath);
-		this.setRecordTag("building");
 	}
 
-	public XMLBuildingProducer(final String filePath, RequestOptions fileOptions) {
+	public XMLBuildingProducer(final String filePath, final RequestOptions fileOptions) {
 		super(filePath, fileOptions);
-		this.setRecordTag("building");
 	}
 
 	public void setMetadataPath(String metadataPath) {
@@ -41,15 +39,10 @@ public class XMLBuildingProducer extends XmlProducer {
 	protected JsonObject parseRecord(Element element) {
 		JsonObject record = new JsonObject();
 		record.addProperty("id", element.getAttribute("id"));
-		record.addProperty("address", textOf(element, "address"));
-		record.addProperty("city", textOf(element, "city"));
-		record.addProperty("yearBuilt", textOf(element, "yearBuilt"));
-		record.addProperty("floors", textOf(element, "floors"));
+		record.addProperty("address", element.getElementsByTagName("address").item(0).getTextContent().trim());
+		record.addProperty("city", element.getElementsByTagName("city").item(0).getTextContent().trim());
+		record.addProperty("yearBuilt", element.getElementsByTagName("yearBuilt").item(0).getTextContent().trim());
+		record.addProperty("floors", element.getElementsByTagName("floors").item(0).getTextContent().trim());
 		return record;
-	}
-
-	private String textOf(Element parent, String tagName) {
-		NodeList nodes = parent.getElementsByTagName(tagName);
-		return nodes.getLength() > 0 ? nodes.item(0).getTextContent().trim() : "";
 	}
 }
