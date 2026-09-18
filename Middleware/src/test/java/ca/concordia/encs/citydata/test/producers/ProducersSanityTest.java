@@ -90,17 +90,21 @@ public class ProducersSanityTest {
 		System.out.println("Result size: " + result.size());
 	    result.forEach(System.out::println);
 	}
-	
+
 	@Test
-	public void testXLSXTemperatureProducer() {
-		final XLSXTemperatureProducer producer = new XLSXTemperatureProducer(null);
-		producer.setFilePath("LB Building/Sensor Data/Temperature/Weekly_Report (temp and flow)_01-01-24.xlsx");
+	public void testXLSXCalibrationProducer() {
+		final XLSXCalibrationProducer producer =
+				new XLSXCalibrationProducer(null);
+
+		producer.setFilePath("OMHM_electricity.xlsx");
 		producer.fetch();
-		
-		ArrayList<JsonObject> result = producer.getResult();
+
+		ArrayList<String> result = producer.getResult();
+
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
-		System.out.println("XLSX Result count: " + result.size());
+
+		System.out.println("XLSX result count: " + result.size());
 		result.stream().limit(5).forEach(System.out::println);
 	}
 

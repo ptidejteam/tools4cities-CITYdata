@@ -10,27 +10,27 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-
-import com.google.gson.JsonObject;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.util.NumberToTextConverter;
 
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
-
 /**
  * This producer can load XLSX from a file or remotely via an HTTP request.
+ * Each worksheet row is returned as a comma-separated String so XLSX data can
+ * use the same operations currently used by CSV producers.
  *
  * @author Vinicius Mioto
- * @since 2026-09-01
- * This base producer was refactored to follow AbstractProducer's new logic.
+ * @since 2026-09-17
  */
-
-public non-sealed class XLSXProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+public non-sealed class XLSXProducer extends AbstractProducer<String>
+		implements IProducer<String> {
 
 	private int sheetIndex = 0;
 	private String sheetName = null;
-	private boolean hasHeader = true;
 
 	public XLSXProducer(final String filePath, final RequestOptions fileOptions) {
 		super(filePath, fileOptions);
@@ -38,10 +38,6 @@ public non-sealed class XLSXProducer extends AbstractProducer<JsonObject> implem
 
 	public XLSXProducer(final String filePath) {
 		super(filePath);
-	}
-
-	public XLSXProducer() {
-		super();
 	}
 
 	public void setSheetIndex(int sheetIndex) {
@@ -52,66 +48,36 @@ public non-sealed class XLSXProducer extends AbstractProducer<JsonObject> implem
 		this.sheetName = sheetName;
 	}
 
-	public void setHasHeader(boolean hasHeader) {
-		this.hasHeader = hasHeader;
-	}
-
 	@Override
 	public void fetch() {
 		beforeFetch();
-		ArrayList<JsonObject> records = new ArrayList<>();
+
+		ArrayList<String> xlsxLines;
 
 		try (InputStream inputStream = obtainInputStream();
-				Workbook workbook = WorkbookFactory.create(inputStream)) {
+			 Workbook workbook = WorkbookFactory.create(inputStream)) {
 
-			Sheet sheet = (sheetName != null && !sheetName.isBlank())
+			Sheet sheet = sheetName != null && !sheetName.isBlank()
 					? workbook.getSheet(sheetName)
 					: workbook.getSheetAt(sheetIndex);
 
 			if (sheet == null) {
-				throw new MiddlewareException.DatasetNotFound("Sheet not found in XLSX workbook");
+				throw new MiddlewareException.DatasetNotFound(
+						"Sheet not found in XLSX workbook");
 			}
 
-			DataFormatter dataFormatter = new DataFormatter();
-			List<String> headers = new ArrayList<>();
-			boolean isFirstRow = true;
-
-			for (Row row : sheet) {
-				if (row == null) {
-					continue;
-				}
-
-				List<String> cellValues = new ArrayList<>();
-				for (int colIndex = 0; colIndex < row.getLastCellNum(); colIndex++) {
-					Cell cell = row.getCell(colIndex);
-					cellValues.add(cell == null ? "" : dataFormatter.formatCellValue(cell).trim());
-				}
-
-				// Skip completely empty rows
-				boolean allEmpty = cellValues.stream().allMatch(String::isEmpty);
-				if (allEmpty) {
-					continue;
-				}
-
-				if (isFirstRow && hasHeader) {
-					headers = cellValues;
-					isFirstRow = false;
-					continue;
-				}
-
-				records.add(parseRow(cellValues, headers));
-				isFirstRow = false;
-			}
-
+			xlsxLines = parseRows(sheet);
+		} catch (MiddlewareException.DatasetNotFound e) {
+			throw e;
 		} catch (Exception e) {
-			throw new MiddlewareException.DatasetNotFound("Error processing XLSX data: " + e.getMessage());
+			throw new MiddlewareException.DatasetNotFound(
+					"Error processing XLSX data: " + e.getMessage());
 		}
 
-		this.setResult(records);
+		this.setResult(xlsxLines);
 		this.applyOperation();
 	}
 
-	// For authorization checks - if the user has the right to access a specific producer. Implemented within the producers
 	protected void beforeFetch() {
 
 	}
@@ -120,21 +86,51 @@ public non-sealed class XLSXProducer extends AbstractProducer<JsonObject> implem
 		return this.fetchStream();
 	}
 
-	// Default row parser mapping header names or column index to cell values
-	protected JsonObject parseRow(List<String> cellValues, List<String> headers) {
-		JsonObject record = new JsonObject();
-		if (!headers.isEmpty()) {
-			for (int i = 0; i < cellValues.size(); i++) {
-				String header = (i < headers.size() && !headers.get(i).isEmpty())
-						? headers.get(i)
-						: "column_" + i;
-				record.addProperty(header, cellValues.get(i));
+	protected ArrayList<String> parseRows(Sheet sheet) {
+		ArrayList<String> lines = new ArrayList<>();
+		DataFormatter dataFormatter = new DataFormatter();
+
+		for (Row row : sheet) {
+			if (row == null || row.getLastCellNum() < 0) {
+				continue;
 			}
-		} else {
-			for (int i = 0; i < cellValues.size(); i++) {
-				record.addProperty("column_" + i, cellValues.get(i));
+
+			List<String> cellValues = new ArrayList<>();
+
+			for (int columnIndex = 0;
+				 columnIndex < row.getLastCellNum();
+				 columnIndex++) {
+
+				Cell cell = row.getCell(columnIndex);
+
+				String cellValue = formatCellValue(cell, dataFormatter);
+
+				cellValues.add(cellValue);
+			}
+
+			boolean isEmptyRow = cellValues.stream().allMatch(String::isEmpty);
+
+			if (!isEmptyRow) {
+				lines.add(String.join(",", cellValues));
 			}
 		}
-		return record;
+
+		return lines;
+	}
+
+	protected String formatCellValue(
+			Cell cell,
+			DataFormatter dataFormatter) {
+
+		if (cell == null) {
+			return "";
+		}
+
+		if (cell.getCellType() == CellType.NUMERIC
+				&& !DateUtil.isCellDateFormatted(cell)) {
+			return NumberToTextConverter.toText(cell.getNumericCellValue());
+		}
+
+		return dataFormatter.formatCellValue(cell).trim();
 	}
 }
