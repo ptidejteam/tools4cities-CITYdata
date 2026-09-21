@@ -43,17 +43,6 @@ public class JSONBuildingProducer extends JSONProducer {
 		} else {
 			this.filePath = "./src/test/resources/" + buildingName + "_building.json";
 		}
-//		if (buildingName != null) {
-//			if (buildingName.endsWith(".geojson")) {
-//				this.filePath = "./src/test/resources/" + buildingName;
-//			} else if (buildingName.endsWith(".json")) {
-//				this.filePath = "./src/test/resources/" + buildingName;
-//			} else {
-//				this.filePath = "./src/test/resources/" + buildingName + "_building.json";
-//			}
-//		} else {
-//			throw new InvalidParameterException("Please provide a building name to the producer.");
-//		}
 	}
 
 	@Override

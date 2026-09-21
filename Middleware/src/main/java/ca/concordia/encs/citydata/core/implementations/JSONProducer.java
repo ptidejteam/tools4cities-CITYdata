@@ -43,26 +43,6 @@ public non-sealed class JSONProducer extends AbstractProducer<JsonObject> implem
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to read JSON file: " + this.getFilePath() + " (" + e.getClass().getSimpleName() + ": " + e.getMessage() + ")", e);
 		}
-//		final ArrayList<JsonObject> jsonOutput = new ArrayList<>();
-//
-//		// Use ByteArrayOutputStream to fetch data
-//
-//		OutputStream outputStream = this.fetchFromPath();
-//		String inputJson = outputStream.toString();
-//
-//		// Convert JSON string to object
-//		final JsonElement inputJsonElement = JsonParser.parseString(inputJson);
-//
-//		JsonObject outputJsonObject = new JsonObject();
-//		if (inputJsonElement.isJsonArray()) {
-//			outputJsonObject.add("result", inputJsonElement);
-//		} else {
-//			outputJsonObject = inputJsonElement.getAsJsonObject();
-//		}
-//
-//		jsonOutput.add(outputJsonObject);
-//		this.setResult(jsonOutput);
-//		this.applyOperation();
 	}
 
 	protected JsonObject wrapAsObject(JsonElement parsedElement) {

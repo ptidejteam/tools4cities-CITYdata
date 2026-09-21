@@ -1,0 +1,9 @@
+{
+  "use": "ca.concordia.encs.citydata.core.implementations.XmlProducer",
+  "withParams": [
+    { "name": "filePath", "value": "costs/montreal_costs.xml" }
+  ],
+  "apply": [
+	
+  ]
+}
